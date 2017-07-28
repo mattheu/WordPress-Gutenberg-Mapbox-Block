@@ -89,13 +89,13 @@ registerBlockType( 'mattheu/gb-map-test', {
 				<SelectControl
 					label={ __( 'Map style.' ) }
 					options={ mapStyleOptions }
-					onChange={ ( e ) => { setAttributes( { mapStyle: e.target.value } ) } }
+					onBlur={ ( value ) => { setAttributes( { mapStyle: value } ); } }
 					selected={ mapStyle }
 				/>
 				<SelectControl
 					label={ __( 'Map height.' ) }
 					options={ [ { label: __( 'Small' ), 'value': 'small' }, { label: __( 'Medium' ), 'value': 'medium' }, { label: __( 'Large' ), 'value': 'large' } ] }
-					onChange={ ( e ) => { setAttributes( { height: e.target.value } ) } }
+					onBlur={ ( value ) => { setAttributes( { height: value } ); } }
 					selected={ height }
 				/>
 			</InspectorControls> ),
