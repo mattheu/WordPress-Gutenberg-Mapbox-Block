@@ -74,32 +74,49 @@ registerBlockType( 'mattheu/gb-map-test', {
 
 		return [
 			!! focus && ( <BlockControls key="controls">
-				<MapToolbar value={ align } onChange={ onChangeAlign } controls={ [ 'left', 'right', 'center', 'wide', 'full' ] } />
+				<MapToolbar
+					value={ align }
+					onChange={ onChangeAlign }
+					controls={ [ 'left', 'right', 'center', 'wide', 'full' ] }
+				/>
 		 	</BlockControls> ),
 			focus && ( <InspectorControls key="inspector">
-				<BlockDescription>
+				<BlockDescription key="description">
 					<p>{ __( 'Mapbox Map Block.' ) }</p>
 				</BlockDescription>
 				<h3>{ __( 'Map Settings' ) }</h3>
 				<ToggleControl
+					key="toggleControl"
 					label={ __( 'Allow user scroll and zoom?' ) }
 					checked={ !! mapAllowScroll }
 					onChange={ toggleMapAllowZoom }
 				/>
 				<SelectControl
+					key="mapStyle"
 					label={ __( 'Map style.' ) }
 					options={ mapStyleOptions }
 					onBlur={ ( value ) => { setAttributes( { mapStyle: value } ); } }
 					selected={ mapStyle }
 				/>
 				<SelectControl
+					key="mapHeight"
 					label={ __( 'Map height.' ) }
 					options={ [ { label: __( 'Small' ), 'value': 'small' }, { label: __( 'Medium' ), 'value': 'medium' }, { label: __( 'Large' ), 'value': 'large' } ] }
 					onBlur={ ( value ) => { setAttributes( { height: value } ); } }
 					selected={ height }
 				/>
 			</InspectorControls> ),
-			<Map align={ align } height={ height } isFocused={ focus } onChange={ onChangeMap } zoom={ mapZoom } center={ mapCenter } style={ mapStyle } allowScroll={ mapAllowScroll }/>
+			<Map
+				key="map"
+				align={ align }
+				height={ height }
+				isFocused={ focus }
+				onChange={ onChangeMap }
+				zoom={ mapZoom }
+				center={ mapCenter }
+				style={ mapStyle }
+				allowScroll={ mapAllowScroll }
+			/>
 		];
 	},
 

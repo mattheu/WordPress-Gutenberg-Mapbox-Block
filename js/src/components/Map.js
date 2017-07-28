@@ -16,8 +16,6 @@ export default class Map extends React.Component {
 	componentDidMount() {
 		mapboxgl.accessToken = this.props.token;
 
-		// let settings = this.getSettings();
-
 		this.map = new mapboxgl.Map({
 			container: this.refs.map,
 			style: this.getMapStyleUrl( this.props.style ),
@@ -30,11 +28,9 @@ export default class Map extends React.Component {
 		});
 
 		this.map.on( 'moveend', ( e ) => {
-			this.props.zoom = this.map.getZoom();
-			this.props.center = this.map.getCenter().toArray();
 			this.props.onChange( {
-				zoom: this.props.zoom,
-				center: this.props.center,
+				zoom: this.map.getZoom(),
+				center: this.map.getCenter().toArray(),
 			} );
 		} );
 	}
