@@ -1,7 +1,52 @@
 .wp-block-matts-map {
 }
 
-.mattheu-gb-map-test-map-container .mapbox-canvas {
+.mattheu-gb-map-test-map-container .mapboxgl-canvas {
 	outline: none !important;
 	box-shadow: none !important;
+}
+
+.editor-visual-editor__block[data-type="mattheu/gb-map-test"] .mattheu-gb-map-test-map-container {
+	min-height: 300px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-height="medium"] .mattheu-gb-map-test-map-container {
+	height: 400px;
+}
+
+.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-height="large"] .mattheu-gb-map-test-map-container {
+	height: 600px;
+}
+
+
+.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="left"],
+.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="right"] {
+	min-width: 33%;
+	max-width: 50%;
+}
+
+.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="left"] {
+	float: left;
+	margin-right: 14px;
+}
+
+.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="right"] {
+	float: right;
+	margin-right: 14px;
+}
+
+.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="wide"] {
+	max-width: 1100px;
+}
+
+.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="wide"] {
+	max-width: 1100px;
+}
+
+.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="full"] {
+	max-width: none;
+	padding-left: 0;
+	padding-right: 0;
 }

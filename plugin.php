@@ -21,6 +21,10 @@ add_action( 'enqueue_block_editor_assets', function() {
 		[ 'wp-blocks', 'wp-element', 'mattheu-gb-map-test-mapbox' ]
 	);
 
+	wp_localize_script( 'mattheu-gb-map-test', 'mattheuGbMapTestData', [
+		'mapboxKey' => defined( 'MATTHEU_GB_MB_TEST_KEY' ) ? MATTHEU_GB_MB_TEST_KEY : null,
+	] );
+
 } );
 
 add_action( 'enqueue_block_assets', function() {
