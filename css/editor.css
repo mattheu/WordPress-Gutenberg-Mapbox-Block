@@ -6,45 +6,53 @@
 	box-shadow: none !important;
 }
 
+.mattheu-gb-map-test-map-container .mapboxgl-ctrl-compass {
+	display: none !important;
+}
+
+.wp-block-mattheu-gb-map-test,
 .editor-visual-editor__block[data-type="mattheu/gb-map-test"] .mattheu-gb-map-test-map-container {
 	min-height: 300px;
 	width: 100%;
 	box-sizing: border-box;
 }
 
+.wp-block-mattheu-gb-map-test[data-height="medium"],
 .editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-height="medium"] .mattheu-gb-map-test-map-container {
 	height: 400px;
 }
 
+.wp-block-mattheu-gb-map-test[data-height="large"],
 .editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-height="large"] .mattheu-gb-map-test-map-container {
 	height: 600px;
 }
 
-
+.wp-block-mattheu-gb-map-test[data-align="left"],
+.wp-block-mattheu-gb-map-test[data-align="right"],
 .editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="left"],
 .editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="right"] {
 	min-width: 33%;
 	max-width: 50%;
 }
 
+.wp-block-mattheu-gb-map-test[data-align="left"],
 .editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="left"] {
 	float: left;
 	margin-right: 14px;
 }
 
+.wp-block-mattheu-gb-map-test[data-align="right"],
 .editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="right"] {
 	float: right;
 	margin-right: 14px;
 }
 
+.wp-block-mattheu-gb-map-test[data-align="wide"],
 .editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="wide"] {
 	max-width: 1100px;
 }
 
-.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="wide"] {
-	max-width: 1100px;
-}
-
+.wp-block-mattheu-gb-map-test[data-align="full"],
 .editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="full"] {
 	max-width: none;
 	padding-left: 0;

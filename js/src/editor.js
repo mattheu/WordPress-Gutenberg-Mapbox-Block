@@ -1,5 +1,6 @@
 import Map from './components/Map'
 import MapToolbar from './components/MapToolbar'
+import mapStyles from './utils/map'
 
 const {
 	registerBlockType,
@@ -14,14 +15,6 @@ const {
 } = wp.blocks.InspectorControls;
 
 const { __ } = wp.i18n;
-
-const mapStyleOptions = [
-	{ label: __( 'Streets' ), value: 'streets' },
-	{ label: __( 'Light' ), value: 'light' },
-	{ label: __( 'Dark' ), value: 'dark' },
-	{ label: __( 'Outdoors' ), value: 'outdoors' },
-	{ label: __( 'Satellite' ), value: 'satellite' },
-];
 
 registerBlockType( 'mattheu/gb-map-test', {
 	title: 'Matts Test Map',
@@ -85,17 +78,12 @@ registerBlockType( 'mattheu/gb-map-test', {
 					<p>{ __( 'Mapbox Map Block.' ) }</p>
 				</BlockDescription>
 				<h3>{ __( 'Map Settings' ) }</h3>
-				<ToggleControl
-					key="toggleControl"
-					label={ __( 'Allow user scroll and zoom?' ) }
-					checked={ !! mapAllowScroll }
-					onChange={ toggleMapAllowZoom }
-				/>
 				<SelectControl
 					key="mapStyle"
 					label={ __( 'Map style.' ) }
-					options={ mapStyleOptions }
+					options={ mapStyles.getOptions() }
 					onBlur={ ( value ) => { setAttributes( { mapStyle: value } ); } }
+					onChange={ ( e ) => { setAttributes( { mapStyle: e.target.value } ); } }
 					selected={ mapStyle }
 				/>
 				<SelectControl
@@ -103,7 +91,14 @@ registerBlockType( 'mattheu/gb-map-test', {
 					label={ __( 'Map height.' ) }
 					options={ [ { label: __( 'Small' ), 'value': 'small' }, { label: __( 'Medium' ), 'value': 'medium' }, { label: __( 'Large' ), 'value': 'large' } ] }
 					onBlur={ ( value ) => { setAttributes( { height: value } ); } }
+					onChange={ ( e ) => { setAttributes( { height: e.target.value } ); } }
 					selected={ height }
+				/>
+				<ToggleControl
+					key="toggleControl"
+					label={ __( 'Allow user scroll and zoom?' ) }
+					checked={ !! mapAllowScroll }
+					onChange={ toggleMapAllowZoom }
 				/>
 			</InspectorControls> ),
 			<Map
@@ -120,7 +115,10 @@ registerBlockType( 'mattheu/gb-map-test', {
 		];
 	},
 
-	save() {
-		return <p>Hello saved content.</p>;
-	},
+	save( { attributes } ) {
+		return <div
+			className="mattheu-gb-map-test-map-container"
+			data-attributes={ JSON.stringify( attributes ) }
+		></div>
+	}
 } );

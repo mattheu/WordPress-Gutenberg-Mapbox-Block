@@ -1,12 +1,5 @@
-const mapStyles = {
-	streets: 'mapbox://styles/mapbox/streets-v10',
-	light: 'mapbox://styles/mapbox/light-v9',
-	dark: 'mapbox://styles/mapbox/dark-v9',
-	outdoors: 'mapbox://styles/mapbox/outdoors-v10',
-	satellite: 'mapbox://styles/mapbox/satellite-v9',
-}
-
 import objectDefaults from 'lodash/defaults';
+import mapStyles from './../utils/map'
 
 export default class Map extends React.Component {
 	render() {
@@ -18,11 +11,12 @@ export default class Map extends React.Component {
 
 		this.map = new mapboxgl.Map({
 			container: this.refs.map,
-			style: this.getMapStyleUrl( this.props.style ),
+			style: mapStyles.getUrl( this.props.style ),
 			center: this.props.center,
 			zoom: this.props.zoom,
 			scrollZoom: this.props.allowScroll,
 			dragPan: this.props.allowScroll,
+			doubleClickZoom: this.props.mapAllowScroll,
 			dragRotate: false,
 			pitchWithRotate: false,
 		});
@@ -33,6 +27,12 @@ export default class Map extends React.Component {
 				center: this.map.getCenter().toArray(),
 			} );
 		} );
+
+		if ( this.props.allowScroll && ! this.nav ) {
+			this.nav = this.nav ? this.nav : new mapboxgl.NavigationControl();
+			this.map.addControl( this.nav, 'top-right' );
+		}
+
 	}
 
 	// Need to do this if we can't disable shouldComponentUpdate
@@ -55,7 +55,7 @@ export default class Map extends React.Component {
 		}
 
 		if ( prevProps.style !== this.props.style ) {
-			this.map.setStyle( this.getMapStyleUrl( this.props.style ) );
+			this.map.setStyle( mapStyles.getUrl( this.props.style ) );
 		}
 
 		if ( ! this.props.allowScroll ) {
@@ -67,10 +67,25 @@ export default class Map extends React.Component {
 				this.map.scrollZoom.disable();
 			}
 		}
-	}
 
-	getMapStyleUrl( style ) {
-		return ( style in mapStyles ) ? mapStyles[ style ] : mapStyles[ Object.keys( mapStyles )[0] ];
+		if ( this.props.isFocused && ! this.nav ) {
+			this.nav = this.nav ? this.nav : new mapboxgl.NavigationControl();
+			this.map.addControl( this.nav, 'top-right' );
+		} else if ( ! this.props.isFocused && this.nav && ! this.props.allowScroll ) {
+			this.map.removeControl( this.nav );
+			delete this.nav;
+		}
+
+		if ( this.props.isFocused && ! this.geolocate ) {
+			this.geolocate = this.geolocate ? this.geolocate : new mapboxgl.GeolocateControl({
+				positionOptions: { enableHighAccuracy: true },
+				trackUserLocation: true
+			});
+			this.map.addControl( this.geolocate, 'top-right' );
+		} else if ( ! this.props.isFocused && this.geolocate ) {
+			this.map.removeControl( this.geolocate );
+			delete this.geolocate;
+		}
 	}
 
 	// I thought I needed this to prevent re-render...
