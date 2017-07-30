@@ -18,6 +18,6 @@ export default {
 
 	getUrl: ( style ) => {
 		let data = _find( mapStyles, { 'name': style } );
-		return data ? data.url : mapStyles[ Object.keys( mapStyles )[0] ];
+		return data ? data.url : mapStyles[ Object.keys( mapStyles )[0] ].url;
 	}
 }

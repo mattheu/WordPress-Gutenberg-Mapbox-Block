@@ -7,6 +7,7 @@ const {
 	BlockControls,
 	InspectorControls,
 	BlockDescription,
+	Editable,
 } = wp.blocks;
 
 const {
@@ -17,8 +18,8 @@ const {
 const { __ } = wp.i18n;
 
 registerBlockType( 'mattheu/gb-map-test', {
-	title: 'Matts Test Map',
-	icon: 'universal-access-alt',
+	title: 'Map - Mapbox',
+	icon: 'location-alt',
 	category: 'layout',
 
 	getEditWrapperProps( attributes ) {
@@ -37,7 +38,7 @@ registerBlockType( 'mattheu/gb-map-test', {
 	},
 
 	edit( { attributes, setAttributes, focus } ) {
-		const { align, height, mapZoom, mapCenter, mapStyle, mapAllowScroll } = attributes;
+		const { align, height, mapZoom, mapCenter, mapStyle, mapAllowScroll, caption } = attributes;
 
 		const onChangeMap = ( settings ) => {
 			setAttributes( {
@@ -64,6 +65,8 @@ registerBlockType( 'mattheu/gb-map-test', {
 		const toggleMapAllowZoom = () => {
 			setAttributes( { mapAllowScroll: ! mapAllowScroll } );
 		}
+
+		console.log( focus );
 
 		return [
 			!! focus && ( <BlockControls key="controls">
@@ -101,24 +104,45 @@ registerBlockType( 'mattheu/gb-map-test', {
 					onChange={ toggleMapAllowZoom }
 				/>
 			</InspectorControls> ),
-			<Map
-				key="map"
-				align={ align }
-				height={ height }
-				isFocused={ focus }
-				onChange={ onChangeMap }
-				zoom={ mapZoom }
-				center={ mapCenter }
-				style={ mapStyle }
-				allowScroll={ mapAllowScroll }
-			/>
+			<figure className="gb-map-test">
+				<Map
+					key="map"
+					align={ align }
+					height={ height }
+					isFocused={ focus }
+					onChange={ onChangeMap }
+					zoom={ mapZoom }
+					center={ mapCenter }
+					style={ mapStyle }
+					allowScroll={ mapAllowScroll }
+				/>
+				{ ( caption && caption.length > 0 ) || !! focus ? (
+					<Editable
+						key="editable"
+						tagName="figcaption"
+						className="gb-map-test-caption"
+						placeholder={ __( 'Write caption…' ) }
+						value={ caption }
+						focus={ focus && focus.editable === 'caption' ? focus : undefined }
+						onChange={ ( value ) => setAttributes( { caption: value } ) }
+						inlineToolbar
+					/>
+				) : null }
+			</figure>
 		];
 	},
 
 	save( { attributes } ) {
-		return <div
-			className="mattheu-gb-map-test-map-container"
-			data-attributes={ JSON.stringify( attributes ) }
-		></div>
+		return <figure className="gb-map-test">
+			<div
+				className="gb-map-test-map-container"
+				data-attributes={ JSON.stringify( attributes ) }
+			></div>
+			{ ( attributes.caption && attributes.caption.length ) ?
+				<figcaption className="gb-map-test-caption">
+					{ attributes.caption }
+				</figcaption>
+			: null }
+		</figure>
 	}
 } );

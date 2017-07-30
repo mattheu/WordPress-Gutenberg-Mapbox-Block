@@ -77,6 +77,10 @@ export default class Map extends React.Component {
 
 	toggleControls() {
 
+		let btn = class {
+			
+		}
+
 		if ( this.props.isFocused && ! this.geocoder ) {
 			this.geocoder = new MapboxGeocoder({ accessToken: mapboxgl.accessToken });
 			this.map.addControl( this.geocoder, 'top-right' );

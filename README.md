@@ -26,3 +26,7 @@ define( 'MATTHEU_GB_MB_TEST_KEY', 'KEY' );
 
 - Adding points
 - Adding geoJSON
+
+- Draw layers
+- Localization
+- react-mapbox-gl
