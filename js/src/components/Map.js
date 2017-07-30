@@ -1,9 +1,11 @@
 import objectDefaults from 'lodash/defaults';
 import mapStyles from './../utils/map'
+import NewPointCtrl from './NewPointCtrl'
 
 export default class Map extends React.Component {
+
 	render() {
-		return <div className="mattheu-gb-map-test-map-container" ref="map"></div>;
+		return <div key="map" className="mattheu-gb-map-test-map-container" ref="map"></div>;
 	}
 
 	componentDidMount() {
@@ -21,8 +23,6 @@ export default class Map extends React.Component {
 			pitchWithRotate: false,
 			attributionControl: false,
 		});
-
-		console.log( this.map );
 
 		this.map.addControl( new mapboxgl.AttributionControl({ compact: true }), 'bottom-right' );
 
@@ -77,10 +77,6 @@ export default class Map extends React.Component {
 
 	toggleControls() {
 
-		let btn = class {
-			
-		}
-
 		if ( this.props.isFocused && ! this.geocoder ) {
 			this.geocoder = new MapboxGeocoder({ accessToken: mapboxgl.accessToken });
 			this.map.addControl( this.geocoder, 'top-right' );
@@ -108,6 +104,15 @@ export default class Map extends React.Component {
 			delete this.geolocate;
 		}
 
+		if ( this.props.isFocused && ! this.newPointCtrl ) {
+			this.newPointCtrl = new NewPointCtrl();
+			this.newPointCtrl.onClickHandler = () => this.addPoint();
+			this.map.addControl( this.newPointCtrl, 'bottom-right' );
+		} else if ( ! this.props.isFocused && this.newPointCtrl ) {
+			this.map.removeControl( this.newPointCtrl );
+			delete this.newPointCtrl;
+		}
+
 		if ( ! this.props.isFocused && this.props.allowScroll && ! this.userNav ) {
 			this.userNav = new mapboxgl.NavigationControl();
 			this.map.addControl( this.userNav, 'top-right' );
@@ -116,6 +121,19 @@ export default class Map extends React.Component {
 			delete this.userNav;
 		}
 
+	}
+
+	addPoint() {
+
+		let markerEL = document.createElement('div');
+		markerEL.className = 'gb-map-test-marker';
+
+		let marker = new mapboxgl.Marker( markerEL )
+			.setLngLat( this.map.getCenter() )
+			.addTo( this.map );
+
+		this.markers = this.markers || [];
+		this.markers.push( marker );
 	}
 
 	// I thought I needed this to prevent re-render...

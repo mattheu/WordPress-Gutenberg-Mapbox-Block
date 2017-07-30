@@ -66,8 +66,6 @@ registerBlockType( 'mattheu/gb-map-test', {
 			setAttributes( { mapAllowScroll: ! mapAllowScroll } );
 		}
 
-		console.log( focus );
-
 		return [
 			!! focus && ( <BlockControls key="controls">
 				<MapToolbar
@@ -104,7 +102,7 @@ registerBlockType( 'mattheu/gb-map-test', {
 					onChange={ toggleMapAllowZoom }
 				/>
 			</InspectorControls> ),
-			<figure className="gb-map-test">
+			<figure className="gb-map-test" key="mapContainer">
 				<Map
 					key="map"
 					align={ align }
