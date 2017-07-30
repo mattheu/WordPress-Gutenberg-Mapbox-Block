@@ -27,18 +27,29 @@ function register_scripts() {
 		'https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.js'
 	);
 
+	wp_register_style(
+		'mattheu-gb-map-test-mapbox-geocoder',
+		'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.1.0/mapbox-gl-geocoder.css'
+	);
+
+	wp_register_script(
+		'mattheu-gb-map-test-mapbox-geocoder',
+		'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.1.0/mapbox-gl-geocoder.min.js'
+	);
 }
 
 function enqueue_block_editor_assets() {
 	wp_enqueue_script(
 		'mattheu-gb-map-test',
 		plugins_url( 'js/build/editor.bundle.js', __FILE__ ),
-		[ 'wp-blocks', 'wp-element', 'mattheu-gb-map-test-mapbox' ]
+		[ 'wp-blocks', 'wp-element', 'mattheu-gb-map-test-mapbox', 'mattheu-gb-map-test-mapbox-geocoder' ]
 	);
 
 	wp_localize_script( 'mattheu-gb-map-test', 'mattheuGbMapTestData', [
 		'mapboxKey' => defined( 'MATTHEU_GB_MB_TEST_KEY' ) ? MATTHEU_GB_MB_TEST_KEY : null,
 	] );
+
+	wp_enqueue_style( 'mattheu-gb-map-test-mapbox-geocoder' );
 }
 
 function enqueue_block_assets() {

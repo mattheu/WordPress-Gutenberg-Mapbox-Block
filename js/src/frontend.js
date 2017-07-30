@@ -8,7 +8,7 @@ _each( document.getElementsByClassName( 'wp-block-mattheu-gb-map-test' ), el => 
 
 	mapboxgl.accessToken = mattheuGbMapTestData.mapboxKey;
 
-	let map = new mapboxgl.Map({
+	this.map = new mapboxgl.Map({
 		container: el,
 		style: mapStyles.getUrl( attributes.mapStyle ),
 		center: attributes.mapCenter,
@@ -18,9 +18,10 @@ _each( document.getElementsByClassName( 'wp-block-mattheu-gb-map-test' ), el => 
 		doubleClickZoom: attributes.mapAllowScroll,
 		dragRotate: false,
 		pitchWithRotate: false,
+		attributionControl: false,
 	});
 
-	console.log( mapboxgl );
+	this.map.addControl( new mapboxgl.AttributionControl({ compact: true }), 'bottom-right' );
 
 	if ( attributes.mapAllowScroll ) {
 		map.addControl( new mapboxgl.NavigationControl(), 'top-right' );

@@ -19,7 +19,12 @@ export default class Map extends React.Component {
 			doubleClickZoom: this.props.mapAllowScroll,
 			dragRotate: false,
 			pitchWithRotate: false,
+			attributionControl: false,
 		});
+
+		console.log( this.map );
+
+		this.map.addControl( new mapboxgl.AttributionControl({ compact: true }), 'bottom-right' );
 
 		this.map.on( 'moveend', ( e ) => {
 			this.props.onChange( {
@@ -28,11 +33,10 @@ export default class Map extends React.Component {
 			} );
 		} );
 
-		if ( this.props.allowScroll && ! this.nav ) {
-			this.nav = this.nav ? this.nav : new mapboxgl.NavigationControl();
-			this.map.addControl( this.nav, 'top-right' );
+		if ( this.props.allowScroll && ! this.userNav ) {
+			this.userNav = new mapboxgl.NavigationControl();
+			this.map.addControl( this.userNav, 'top-right' );
 		}
-
 	}
 
 	// Need to do this if we can't disable shouldComponentUpdate
@@ -68,10 +72,23 @@ export default class Map extends React.Component {
 			}
 		}
 
+		this.toggleControls();
+	}
+
+	toggleControls() {
+
+		if ( this.props.isFocused && ! this.geocoder ) {
+			this.geocoder = new MapboxGeocoder({ accessToken: mapboxgl.accessToken });
+			this.map.addControl( this.geocoder, 'top-right' );
+		} else if ( ! this.props.isFocused && this.geocoder ) {
+			this.map.removeControl( this.geocoder );
+			delete this.geocoder;
+		}
+
 		if ( this.props.isFocused && ! this.nav ) {
 			this.nav = this.nav ? this.nav : new mapboxgl.NavigationControl();
 			this.map.addControl( this.nav, 'top-right' );
-		} else if ( ! this.props.isFocused && this.nav && ! this.props.allowScroll ) {
+		} else if ( ! this.props.isFocused && this.nav ) {
 			this.map.removeControl( this.nav );
 			delete this.nav;
 		}
@@ -86,6 +103,15 @@ export default class Map extends React.Component {
 			this.map.removeControl( this.geolocate );
 			delete this.geolocate;
 		}
+
+		if ( ! this.props.isFocused && this.props.allowScroll && ! this.userNav ) {
+			this.userNav = new mapboxgl.NavigationControl();
+			this.map.addControl( this.userNav, 'top-right' );
+		} else if ( this.props.isFocused && this.userNav ) {
+			this.map.removeControl( this.userNav );
+			delete this.userNav;
+		}
+
 	}
 
 	// I thought I needed this to prevent re-render...
@@ -93,6 +119,11 @@ export default class Map extends React.Component {
 	// shouldComponentUpdate() {
 	// 	return false;
 	// }
+	//
+
+	renderSearchBox() {
+	}
+
 }
 
 Map.defaultProps = {

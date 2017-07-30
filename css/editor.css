@@ -58,3 +58,21 @@
 	padding-left: 0;
 	padding-right: 0;
 }
+
+.search-ctrl .mapboxgl-ctrl {
+	display: flex;
+}
+
+.search-ctrl input {
+	margin: 0;
+	width: calc( 100% - 30px );
+	background: transparent;
+	border: none;
+	box-shadow: none;
+}
+
+.search-ctrl input:focus {
+	outline: none;
+	border: none;
+	box-shadow: none;
+}
