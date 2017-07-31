@@ -3,7 +3,7 @@ export default class Btn {}
 Btn.prototype.onAdd = function( map ) {
 	this._map = map;
 	this._container = document.createElement( 'div' );
-	this._container.className   = 'mapboxgl-ctrl mapboxgl-ctrl-group';
+	this._container.className   = 'mapboxgl-ctrl mapboxgl-ctrl-group gb-map-test-new-point-ctrl';
 	ReactDOM.render(
 		<button onClick={ () => { this.onClickHandler(); } }>New</button>,
 		this._container

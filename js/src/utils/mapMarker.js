@@ -5,7 +5,7 @@ import objectDefaults from 'lodash/defaults';
 
 export default class Marker {
 
-	constructor( args, onChange, onRemove ) {
+	constructor( args, onChange ) {
 		this.args = objectDefaults( args, {
 			lngLat: [ 0, 0 ],
 			title: '',
@@ -13,7 +13,6 @@ export default class Marker {
 		} );
 
 		this.onChange = onChange;
-		this.onRemove = onRemove;
 	}
 
 	addToMap( map ) {
@@ -31,7 +30,7 @@ export default class Marker {
 					value={ this.args.title }
 					onChange={ ( value ) => {
 						this.args.title = value;
-						this.onChange( this.markers );
+						this.onChange( this.args );
 					} }
 					placeholder={ __( 'Popup title' ) }
 				/>
@@ -42,11 +41,11 @@ export default class Marker {
 					value={ this.args.text.trim() }
 					onChange={ ( value ) => {
 						this.args.text = value;
-						this.onChange( this.markers );
+						this.onChange( this.args );
 					} }
 					placeholder={ __( 'Popup text' ) }
 				/>
-				<button onClick={ () => { this.onRemove( this ) } }>Remove</button>
+				<button onClick={ () => { this.onChange( 'delete' ) } }>Remove</button>
 			</div>, el ) )
 			.addTo( map );
 

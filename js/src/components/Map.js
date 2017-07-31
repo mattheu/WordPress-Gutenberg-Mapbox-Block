@@ -2,9 +2,10 @@ import React from 'react';
 import ReactMapboxGl, { Marker, Popup } from "react-mapbox-gl";
 import objectDefaults from 'lodash/defaults';
 import mapStyles from './../utils/map'
-import NewPointCtrl from './NewPointCtrl'
-import MapMarker from '../utils/MapMarker'
-import _find from 'lodash/find';
+// import _find from 'lodash/find';
+
+// import NewPointCtrl from './NewPointCtrl'
+// import MapMarker from '../utils/MapMarker'
 
 const __ = wp.i18n.__;
 const Editable = wp.blocks.Editable;
@@ -42,34 +43,30 @@ export default class Map extends React.Component {
 			attributionControl: false,
 		});
 
+		// Add compact attribution.
 		this.map.addControl( new mapboxgl.AttributionControl({ compact: true }), 'bottom-right' );
 
-		this.map.on( 'moveend', ( e ) => {
-			this.props.onChange( {
-				zoom: this.map.getZoom(),
-				center: this.map.getCenter().toArray(),
-			} );
-		} );
+		// Trigger change after move.
+		this.map.on( 'moveend', ( e ) => { this.onChange } );
 
-		if ( this.props.allowScroll && ! this.userNav ) {
-			this.userNav = new mapboxgl.NavigationControl();
-			this.map.addControl( this.userNav, 'top-right' );
-		}
+		// Add the map controls on initial render. Note that these are shown/hidden in CSS as appropriate.
+		this.addControls();
+		this.refs.map.classList.toggle( 'gb-map-test-container--no-scroll', ! this.props.allowScroll );
 
 		// Add existing markers.
 		// Doing some hacky rendering of markers since we're mixing react and the mapbox-gl JS.
 		// Defer to allow this react component to render before doing this..
-		window.setTimeout( () => {
-			this.props.markers.forEach( markerArgs => {
-				let marker = new MapMarker( markerArgs, this.props.onChangeMarkers, this.props.onRemoveMarker );
-				marker.addToMap( this.map );
-
-				this._markers = this._markers || [];
-				this._markers.push( marker );
-
-				this.props.onChangeMarkers( this._markers.map( _marker => { return _marker.args } ) );
-			} );
-		} );
+		// window.setTimeout( () => {
+		// 	this.props.markers.forEach( markerArgs => {
+		// 		let marker = new MapMarker( markerArgs, this.props.onChangeMarkers );
+		// 		marker.addToMap( this.map );
+		//
+		// 		this._markers = this._markers || [];
+		// 		this._markers.push( marker );
+		//
+		// 		this.props.onChangeMarkers( this._markers.map( _marker => { return _marker.args } ) );
+		// 	} );
+		// } );
 
 	}
 
@@ -89,95 +86,68 @@ export default class Map extends React.Component {
 			this.map.setStyle( mapStyles.getUrl( this.props.style ) );
 		}
 
-		if ( ! this.props.allowScroll ) {
-			if ( this.props.isFocused ) {
-				this.map.dragPan.enable();
-				this.map.scrollZoom.enable();
-			} else {
-				this.map.dragPan.disable();
-				this.map.scrollZoom.disable();
-			}
+		this.refs.map.classList.toggle( 'gb-map-test-container--no-scroll', ! this.props.allowScroll );
+
+		if ( this.props.allowScroll || this.props.isFocused ) {
+			this.map.dragPan.enable();
+			this.map.scrollZoom.enable();
+		} else {
+			this.map.dragPan.disable();
+			this.map.scrollZoom.disable();
 		}
 
-		this.toggleControls();
+	}
+
+	onChange() {
+		this.props.onChange( {
+			zoom:    this.map.getZoom(),
+			center:  this.map.getCenter().toArray(),
+			// markers: this._markers.map( _marker => { return _marker.args; } ),
+		} );
 	}
 
 	/**
-	 * Toggle which map controls are visible.
+	 * Add controls to map.
 	 *
-	 * Some notes:
-	 * Most controls are only visible when focused e.g. geolocation and geocoder.
-	 * Navigation controls are visible unfocused if the allowScroll prop is true. Otherwise only for focused.
-	 * Note focused and unfocused nav controls are actually different instances... because ordering these was tricky.
-	 * New Point controller is a custom button. Adds a new marker at the current map center point.
-	 *
-	 * @return {[type]} [description]
+	 * These are shown/hidden in CSS depending on focus.
 	 */
-	toggleControls() {
+	addControls() {
 
-		if ( this.props.isFocused && ! this.geocoder ) {
-			this.geocoder = new MapboxGeocoder({ accessToken: mapboxgl.accessToken });
-			this.map.addControl( this.geocoder, 'top-right' );
-		} else if ( ! this.props.isFocused && this.geocoder ) {
-			this.map.removeControl( this.geocoder );
-			delete this.geocoder;
-		}
+		this.controls = {};
 
-		if ( this.props.isFocused && ! this.nav ) {
-			this.nav = this.nav ? this.nav : new mapboxgl.NavigationControl();
-			this.map.addControl( this.nav, 'top-right' );
-		} else if ( ! this.props.isFocused && this.nav ) {
-			this.map.removeControl( this.nav );
-			delete this.nav;
-		}
+		this.controls.geocoder = new MapboxGeocoder({ accessToken: mapboxgl.accessToken });
+		this.map.addControl( this.controls.geocoder, 'top-right' );
 
-		if ( this.props.isFocused && ! this.geolocate ) {
-			this.geolocate = this.geolocate ? this.geolocate : new mapboxgl.GeolocateControl({
-				positionOptions: { enableHighAccuracy: true },
-				trackUserLocation: true
-			});
-			this.map.addControl( this.geolocate, 'top-right' );
-		} else if ( ! this.props.isFocused && this.geolocate ) {
-			this.map.removeControl( this.geolocate );
-			delete this.geolocate;
-		}
+		this.controls.nav = new mapboxgl.NavigationControl();
+		this.map.addControl( this.controls.nav, 'top-right' );
 
-		if ( this.props.isFocused && ! this.newPointCtrl ) {
-			this.newPointCtrl = new NewPointCtrl();
-			// Custom click handler.
-			this.newPointCtrl.onClickHandler = () => this.addNewMarker();
-			this.map.addControl( this.newPointCtrl, 'bottom-right' );
-		} else if ( ! this.props.isFocused && this.newPointCtrl ) {
-			this.map.removeControl( this.newPointCtrl );
-			delete this.newPointCtrl;
-		}
+		this.controls.geolocate = new mapboxgl.GeolocateControl({
+			positionOptions: { enableHighAccuracy: true },
+			trackUserLocation: true
+		});
+		this.map.addControl( this.controls.geolocate, 'top-right' );
 
-		if ( ! this.props.isFocused && this.props.allowScroll && ! this.userNav ) {
-			this.userNav = new mapboxgl.NavigationControl();
-			this.map.addControl( this.userNav, 'top-right' );
-		} else if ( this.props.isFocused && this.userNav ) {
-			this.map.removeControl( this.userNav );
-			delete this.userNav;
-		}
+		// this.newPointCtrl = new NewPointCtrl();
+		// this.newPointCtrl.onClickHandler = () => this.addNewMarker();
+		// this.map.addControl( this.newPointCtrl, 'bottom-right' );
 
 	}
 
-	addNewMarker( markerArgs ) {
-
-		markerArgs = objectDefaults( markerArgs, {
-			lngLat: this.map.getCenter(),
-			title: '',
-			text: '',
-		} );
-
-		let marker = new MapMarker( markerArgs, this.props.onChangeMarkers, this.props.onRemoveMarker );
-		marker.addToMap( this.map );
-
-		this._markers = this._markers || [];
-		this._markers.push( marker );
-
-		this.props.onChangeMarkers( this._markers.map( _marker => { return _marker.args } ) );
-	}
+	// addNewMarker( markerArgs ) {
+	// 	markerArgs = objectDefaults( markerArgs, {
+	// 		lngLat: this.map.getCenter(),
+	// 		title: '',
+	// 		text: '',
+	// 	} );
+	//
+	// 	let marker = new MapMarker( markerArgs, this.props.onChangeMarkers, this.props.onRemoveMarker );
+	// 	marker.addToMap( this.map );
+	//
+	// 	this._markers = this._markers || [];
+	// 	this._markers.push( marker );
+	//
+	// 	this.props.onChangeMarkers( this._markers.map( _marker => { return _marker.args } ) );
+	// }
 
 }
 
@@ -192,6 +162,4 @@ Map.defaultProps = {
 	allowScroll: false,
 	markers: [],
 	onChange: () => { console.log( this.props ) },
-	onChangeMarkers: () => { console.log( this.props ) },
-	onRemoveMarker: ( marker ) => { console.log( marker ) },
 };

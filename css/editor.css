@@ -118,3 +118,12 @@
 	margin-top: 4px !important;
 	font-weight: normal;
 }
+
+
+.editor-visual-editor__block:not( .is-selected ) .mapboxgl-ctrl-geocoder,
+.editor-visual-editor__block:not( .is-selected ) .gb-map-test-container--no-scroll .mapboxgl-ctrl-zoom-in,
+.editor-visual-editor__block:not( .is-selected ) .gb-map-test-container--no-scroll .mapboxgl-ctrl-zoom-out,
+.editor-visual-editor__block:not( .is-selected ) .mapboxgl-ctrl-geolocate,
+.editor-visual-editor__block:not( .is-selected ) .gb-map-test-new-point-ctrl {
+	display: none;
+}

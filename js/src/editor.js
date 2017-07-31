@@ -44,11 +44,8 @@ registerBlockType( 'mattheu/gb-map-test', {
 			setAttributes( {
 				mapZoom: settings.zoom,
 				mapCenter: settings.center,
+				mapMarkers: markers,
 			});
-		}
-
-		const onChangeMarkers = ( markers ) => {
-			setAttributes( { mapMarkers: markers });
 		}
 
 		/**
@@ -113,7 +110,6 @@ registerBlockType( 'mattheu/gb-map-test', {
 					height={ height }
 					isFocused={ focus }
 					onChange={ onChangeMap }
-					onChangeMarkers={ onChangeMarkers }
 					markers={ mapMarkers }
 					zoom={ mapZoom }
 					center={ mapCenter }
