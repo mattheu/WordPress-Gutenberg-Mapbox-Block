@@ -21,6 +21,12 @@ module.exports = {
 			}
 		]
 	},
+	externals: {
+		'jquery': 'jQuery',
+		'react': 'React',
+		'react-dom': 'ReactDom',
+		'mapbox-gl': 'mapboxgl',
+	},
 	stats: {
 		colors: true
 	},

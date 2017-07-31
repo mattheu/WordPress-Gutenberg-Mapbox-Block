@@ -1,13 +1,31 @@
+import React from 'react';
+import ReactMapboxGl, { Marker, Popup } from "react-mapbox-gl";
 import objectDefaults from 'lodash/defaults';
 import mapStyles from './../utils/map'
 import NewPointCtrl from './NewPointCtrl'
+import MapMarker from '../utils/MapMarker'
+import _find from 'lodash/find';
+
+const __ = wp.i18n.__;
+const Editable = wp.blocks.Editable;
 
 export default class Map extends React.Component {
 
+	/**
+	 * Render.
+	 *
+	 * This is super simple.
+	 * Because no props are used here, changing them doesn't cause it to re-render.
+	 */
 	render() {
 		return <div key="map" className="mattheu-gb-map-test-map-container" ref="map"></div>;
 	}
 
+	/**
+	 * Initial map setup.
+	 *
+	 * @return null
+	 */
 	componentDidMount() {
 		mapboxgl.accessToken = this.props.token;
 
@@ -37,21 +55,30 @@ export default class Map extends React.Component {
 			this.userNav = new mapboxgl.NavigationControl();
 			this.map.addControl( this.userNav, 'top-right' );
 		}
+
+		// Add existing markers.
+		// Doing some hacky rendering of markers since we're mixing react and the mapbox-gl JS.
+		// Defer to allow this react component to render before doing this..
+		window.setTimeout( () => {
+			this.props.markers.forEach( markerArgs => {
+				let marker = new MapMarker( markerArgs, this.props.onChangeMarkers, this.props.onRemoveMarker );
+				marker.addToMap( this.map );
+
+				this._markers = this._markers || [];
+				this._markers.push( marker );
+
+				this.props.onChangeMarkers( this._markers.map( _marker => { return _marker.args } ) );
+			} );
+		} );
+
 	}
 
-	// Need to do this if we can't disable shouldComponentUpdate
-	// as this prevents componentDidUpdate from firing.
-	// componentWillReceiveProps( nextProps ) {
-	// 	if ( nextProps.align !== this.props.align ) {
-	// 		window.setTimeout( () => {
-	// 			this.map.resize();
-	// 		});
-	// 	}
-	// }
-	// componentWillReceiveProps( nextProps ) {
-	// 	console.log( 'componentWillReceiveProps', nextProps.style, this.props.style );
-	// }
-
+	/**
+	 * Handle updated props.
+	 *
+	 * @param  object prevProps Previous props.
+	 * @return null
+	 */
 	componentDidUpdate( prevProps ) {
 
 		if ( prevProps.align !== this.props.align || prevProps.height !== this.props.height ) {
@@ -75,6 +102,17 @@ export default class Map extends React.Component {
 		this.toggleControls();
 	}
 
+	/**
+	 * Toggle which map controls are visible.
+	 *
+	 * Some notes:
+	 * Most controls are only visible when focused e.g. geolocation and geocoder.
+	 * Navigation controls are visible unfocused if the allowScroll prop is true. Otherwise only for focused.
+	 * Note focused and unfocused nav controls are actually different instances... because ordering these was tricky.
+	 * New Point controller is a custom button. Adds a new marker at the current map center point.
+	 *
+	 * @return {[type]} [description]
+	 */
 	toggleControls() {
 
 		if ( this.props.isFocused && ! this.geocoder ) {
@@ -106,7 +144,8 @@ export default class Map extends React.Component {
 
 		if ( this.props.isFocused && ! this.newPointCtrl ) {
 			this.newPointCtrl = new NewPointCtrl();
-			this.newPointCtrl.onClickHandler = () => this.addPoint();
+			// Custom click handler.
+			this.newPointCtrl.onClickHandler = () => this.addNewMarker();
 			this.map.addControl( this.newPointCtrl, 'bottom-right' );
 		} else if ( ! this.props.isFocused && this.newPointCtrl ) {
 			this.map.removeControl( this.newPointCtrl );
@@ -123,27 +162,21 @@ export default class Map extends React.Component {
 
 	}
 
-	addPoint() {
+	addNewMarker( markerArgs ) {
 
-		let markerEL = document.createElement('div');
-		markerEL.className = 'gb-map-test-marker';
+		markerArgs = objectDefaults( markerArgs, {
+			lngLat: this.map.getCenter(),
+			title: '',
+			text: '',
+		} );
 
-		let marker = new mapboxgl.Marker( markerEL )
-			.setLngLat( this.map.getCenter() )
-			.addTo( this.map );
+		let marker = new MapMarker( markerArgs, this.props.onChangeMarkers, this.props.onRemoveMarker );
+		marker.addToMap( this.map );
 
-		this.markers = this.markers || [];
-		this.markers.push( marker );
-	}
+		this._markers = this._markers || [];
+		this._markers.push( marker );
 
-	// I thought I needed this to prevent re-render...
-	// but I think that if i'm not actually changing the dom, it won't.
-	// shouldComponentUpdate() {
-	// 	return false;
-	// }
-	//
-
-	renderSearchBox() {
+		this.props.onChangeMarkers( this._markers.map( _marker => { return _marker.args } ) );
 	}
 
 }
@@ -157,5 +190,8 @@ Map.defaultProps = {
 	zoom: 0.75,
 	style: 'outdoors',
 	allowScroll: false,
-	onChange: () => { console.log( this.props.settings ) }
+	markers: [],
+	onChange: () => { console.log( this.props ) },
+	onChangeMarkers: () => { console.log( this.props ) },
+	onRemoveMarker: ( marker ) => { console.log( marker ) },
 };
