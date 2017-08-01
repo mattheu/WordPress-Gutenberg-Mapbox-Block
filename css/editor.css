@@ -80,45 +80,6 @@
 	text-align: center;
 	font-size: 13px;
 }
-/*
-.gb-map-test-marker {
-	width: 40px;
-	height: 40px;
-	margin-top: -20px;
-	background: url( './../images/icon-marker.svg' ) no-repeat;
-	background-size: contain;
-}*/
-
-.gb-map-test-marker {
-	width: 14px;
-	height: 14px;
-	background: #ff4A41;
-	box-shadow: 0 0 0 2px rgba(0,0,0,0.2), 0 0 0 2px white inset;
-	border-radius: 100%;
-	background-size: contain;
-}
-
-.gb-map-test-marker:hover {
-	cursor: pointer;
-	background: #ff4c09;
-	box-shadow: 0 0 0 4px rgba(0,0,0,0.2), 0 0 0 1px white inset;
-}
-
-.gb-map-test-popup-title,
-.gb-map-test-popup-text {
-	font-weight: bold;
-	font-size: 14px !important;
-	margin: 0 !important;
-	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif !important;
-	line-height: 1.4 !important;
-	max-width: 300px;
-}
-
-.gb-map-test-popup-text {
-	margin-top: 4px !important;
-	font-weight: normal;
-}
-
 
 .editor-visual-editor__block:not( .is-selected ) .mapboxgl-ctrl-geocoder,
 .editor-visual-editor__block:not( .is-selected ) .gb-map-test-container--no-scroll .mapboxgl-ctrl-zoom-in,

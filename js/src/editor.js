@@ -38,13 +38,12 @@ registerBlockType( 'mattheu/gb-map-test', {
 	},
 
 	edit( { attributes, setAttributes, focus } ) {
-		const { align, height, mapZoom, mapCenter, mapStyle, mapAllowScroll, mapMarkers, caption } = attributes;
+		const { align, height, mapZoom, mapCenter, mapStyle, mapAllowScroll, caption } = attributes;
 
 		const onChangeMap = ( settings ) => {
 			setAttributes( {
 				mapZoom: settings.zoom,
 				mapCenter: settings.center,
-				mapMarkers: markers,
 			});
 		}
 
@@ -110,7 +109,6 @@ registerBlockType( 'mattheu/gb-map-test', {
 					height={ height }
 					isFocused={ focus }
 					onChange={ onChangeMap }
-					markers={ mapMarkers }
 					zoom={ mapZoom }
 					center={ mapCenter }
 					style={ mapStyle }

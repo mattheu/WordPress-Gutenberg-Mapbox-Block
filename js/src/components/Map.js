@@ -1,11 +1,6 @@
 import React from 'react';
-import ReactMapboxGl, { Marker, Popup } from "react-mapbox-gl";
 import objectDefaults from 'lodash/defaults';
 import mapStyles from './../utils/map'
-// import _find from 'lodash/find';
-
-// import NewPointCtrl from './NewPointCtrl'
-// import MapMarker from '../utils/MapMarker'
 
 const __ = wp.i18n.__;
 const Editable = wp.blocks.Editable;
@@ -53,21 +48,6 @@ export default class Map extends React.Component {
 		this.addControls();
 		this.refs.map.classList.toggle( 'gb-map-test-container--no-scroll', ! this.props.allowScroll );
 
-		// Add existing markers.
-		// Doing some hacky rendering of markers since we're mixing react and the mapbox-gl JS.
-		// Defer to allow this react component to render before doing this..
-		// window.setTimeout( () => {
-		// 	this.props.markers.forEach( markerArgs => {
-		// 		let marker = new MapMarker( markerArgs, this.props.onChangeMarkers );
-		// 		marker.addToMap( this.map );
-		//
-		// 		this._markers = this._markers || [];
-		// 		this._markers.push( marker );
-		//
-		// 		this.props.onChangeMarkers( this._markers.map( _marker => { return _marker.args } ) );
-		// 	} );
-		// } );
-
 	}
 
 	/**
@@ -102,7 +82,6 @@ export default class Map extends React.Component {
 		this.props.onChange( {
 			zoom:    this.map.getZoom(),
 			center:  this.map.getCenter().toArray(),
-			// markers: this._markers.map( _marker => { return _marker.args; } ),
 		} );
 	}
 
@@ -127,27 +106,7 @@ export default class Map extends React.Component {
 		});
 		this.map.addControl( this.controls.geolocate, 'top-right' );
 
-		// this.newPointCtrl = new NewPointCtrl();
-		// this.newPointCtrl.onClickHandler = () => this.addNewMarker();
-		// this.map.addControl( this.newPointCtrl, 'bottom-right' );
-
 	}
-
-	// addNewMarker( markerArgs ) {
-	// 	markerArgs = objectDefaults( markerArgs, {
-	// 		lngLat: this.map.getCenter(),
-	// 		title: '',
-	// 		text: '',
-	// 	} );
-	//
-	// 	let marker = new MapMarker( markerArgs, this.props.onChangeMarkers, this.props.onRemoveMarker );
-	// 	marker.addToMap( this.map );
-	//
-	// 	this._markers = this._markers || [];
-	// 	this._markers.push( marker );
-	//
-	// 	this.props.onChangeMarkers( this._markers.map( _marker => { return _marker.args } ) );
-	// }
 
 }
 
@@ -160,6 +119,5 @@ Map.defaultProps = {
 	zoom: 0.75,
 	style: 'outdoors',
 	allowScroll: false,
-	markers: [],
 	onChange: () => { console.log( this.props ) },
 };
