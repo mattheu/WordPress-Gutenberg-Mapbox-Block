@@ -1,5 +1,7 @@
 # Matts Mapbox Map Gutenberg Block Test
 
+THIS PROJECT IS CURRENTLY IN DEVELOPMENT. THINGS ARE LIKELY TO CHANGE.
+
 Insert map blocks in Gutenberg. Stunning maps provided by Mapbox.
 
 Note that you will need a Mapbox account to use this. The free tier allows 50k map views per month.
@@ -21,12 +23,3 @@ define( 'MATTHEU_GB_MB_TEST_KEY', 'KEY' );
 * Install dependencies by running `yarn` or `npm install`.
 * To build run `npm run build`
 * Development run `npm run watch`
-
-## TODO
-
-- Adding points
-- Adding geoJSON
-
-- Draw layers
-- Localization
-- ~~react-mapbox-gl~~ Can't actually use this - as it assumes react is all part of the bundle.
