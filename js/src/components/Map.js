@@ -9,12 +9,12 @@ export default class Map extends React.Component {
 
 	/**
 	 * Render.
-	 *
-	 * This is super simple.
-	 * Because no props are used here, changing them doesn't cause it to re-render.
 	 */
 	render() {
-		return <div key="map" className="mattheu-gb-map-test-map-container" ref="map"></div>;
+		return <div
+			className="mattheu-gb-map-test-map-container"
+			ref="map"
+		/>;
 	}
 
 	/**
@@ -34,7 +34,7 @@ export default class Map extends React.Component {
 			dragPan: this.props.allowScroll,
 			doubleClickZoom: this.props.mapAllowScroll,
 			dragRotate: false,
-			pitchWithRotate: false,
+			// pitchWithRotate: false,
 			attributionControl: false,
 		});
 
@@ -42,12 +42,11 @@ export default class Map extends React.Component {
 		this.map.addControl( new mapboxgl.AttributionControl({ compact: true }), 'bottom-right' );
 
 		// Trigger change after move.
-		this.map.on( 'moveend', ( e ) => { this.onChange } );
+		this.map.on( 'moveend', () => { this.onChange()	} );
 
 		// Add the map controls on initial render. Note that these are shown/hidden in CSS as appropriate.
 		this.addControls();
 		this.refs.map.classList.toggle( 'gb-map-test-container--no-scroll', ! this.props.allowScroll );
-
 	}
 
 	/**
@@ -57,7 +56,6 @@ export default class Map extends React.Component {
 	 * @return null
 	 */
 	componentDidUpdate( prevProps ) {
-
 		if ( prevProps.align !== this.props.align || prevProps.height !== this.props.height ) {
 			this.map.resize();
 		}
@@ -91,7 +89,6 @@ export default class Map extends React.Component {
 	 * These are shown/hidden in CSS depending on focus.
 	 */
 	addControls() {
-
 		this.controls = {};
 
 		this.controls.geocoder = new MapboxGeocoder({ accessToken: mapboxgl.accessToken });
@@ -104,8 +101,8 @@ export default class Map extends React.Component {
 			positionOptions: { enableHighAccuracy: true },
 			trackUserLocation: true
 		});
-		this.map.addControl( this.controls.geolocate, 'top-right' );
 
+		this.map.addControl( this.controls.geolocate, 'top-right' );
 	}
 
 }

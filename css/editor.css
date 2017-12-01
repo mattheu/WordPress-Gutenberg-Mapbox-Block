@@ -2,7 +2,7 @@
 }
 
 .gb-map-test-map-container {
-	width: 100%;
+	max-width: 700px;
 	min-height: 300px;
 }
 
@@ -16,50 +16,54 @@
 	display: none !important;
 }
 
-.wp-block-mattheu-gb-map-test,
-.editor-visual-editor__block[data-type="mattheu/gb-map-test"] .mattheu-gb-map-test-map-container {
+.gb-map-test-map-container,
+.editor-block-list__block[data-type="mattheu/gb-map-test"] .mattheu-gb-map-test-map-container {
 	min-height: 300px;
 	width: 100%;
 	box-sizing: border-box;
+	margin-left: auto;
+	margin-right: auto;
 }
 
-.wp-block-mattheu-gb-map-test[data-height="medium"],
-.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-height="medium"] .mattheu-gb-map-test-map-container {
+.gb-map-test-map-container[data-height="medium"],
+.editor-block-list__block[data-type="mattheu/gb-map-test"][data-height="medium"] .mattheu-gb-map-test-map-container {
 	height: 400px;
 }
 
-.wp-block-mattheu-gb-map-test[data-height="large"],
-.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-height="large"] .mattheu-gb-map-test-map-container {
+.gb-map-test-map-container[data-height="large"],
+.editor-block-list__block[data-type="mattheu/gb-map-test"][data-height="large"] .mattheu-gb-map-test-map-container {
 	height: 600px;
 }
 
-.wp-block-mattheu-gb-map-test[data-align="left"],
-.wp-block-mattheu-gb-map-test[data-align="right"],
-.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="left"],
-.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="right"] {
+.gb-map-test-map-container[data-align="left"],
+.gb-map-test-map-container[data-align="right"],
+.editor-block-list__block[data-type="mattheu/gb-map-test"][data-align="left"],
+.editor-block-list__block[data-type="mattheu/gb-map-test"][data-align="right"] {
 	min-width: 33%;
 	max-width: 66%;
 }
 
-.wp-block-mattheu-gb-map-test[data-align="left"],
-.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="left"] {
+.gb-map-test-map-container[data-align="left"],
+.editor-block-list__block[data-type="mattheu/gb-map-test"][data-align="left"] {
 	float: left;
 	margin-right: 14px;
 }
 
-.wp-block-mattheu-gb-map-test[data-align="right"],
-.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="right"] {
+.gb-map-test-map-container[data-align="right"],
+.editor-block-list__block[data-type="mattheu/gb-map-test"][data-align="right"] {
 	float: right;
 	margin-right: 14px;
 }
 
-.wp-block-mattheu-gb-map-test[data-align="wide"],
-.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="wide"] {
+.gb-map-test-map-container[data-align="wide"],
+.editor-block-list__block[data-type="mattheu/gb-map-test"][data-align="wide"] {
 	max-width: 1100px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
-.wp-block-mattheu-gb-map-test[data-align="full"],
-.editor-visual-editor__block[data-type="mattheu/gb-map-test"][data-align="full"] {
+.gb-map-test-map-container[data-align="full"],
+.editor-block-list__block[data-type="mattheu/gb-map-test"][data-align="full"] {
 	max-width: none;
 	padding-left: 0;
 	padding-right: 0;
@@ -70,7 +74,7 @@
 	margin: 0 0 1.5em 0;
 }
 
-.editor-visual-editor__block[data-type="mattheu/gb-map-test"] .gb-map-test {
+.editor-block-list__block[data-type="mattheu/gb-map-test"] .gb-map-test {
 	margin: 0;
 }
 
@@ -81,10 +85,14 @@
 	font-size: 13px;
 }
 
-.editor-visual-editor__block:not( .is-selected ) .mapboxgl-ctrl-geocoder,
-.editor-visual-editor__block:not( .is-selected ) .gb-map-test-container--no-scroll .mapboxgl-ctrl-zoom-in,
-.editor-visual-editor__block:not( .is-selected ) .gb-map-test-container--no-scroll .mapboxgl-ctrl-zoom-out,
-.editor-visual-editor__block:not( .is-selected ) .mapboxgl-ctrl-geolocate,
-.editor-visual-editor__block:not( .is-selected ) .gb-map-test-new-point-ctrl {
+/*
+This isn't working... because after typing the .is-selected class is removed and the controls dissapear.
+Maybe there's a way around that!
+*/
+.gb-map-test[data-focused="false"] .mapboxgl-ctrl-geocoder,
+.gb-map-test[data-focused="false"] .gb-map-test-container--no-scroll .mapboxgl-ctrl-zoom-in,
+.gb-map-test[data-focused="false"] .gb-map-test-container--no-scroll .mapboxgl-ctrl-zoom-out,
+.gb-map-test[data-focused="false"] .mapboxgl-ctrl-geolocate,
+.gb-map-test[data-focused="false"] .gb-map-test-new-point-ctrl {
 	display: none;
 }

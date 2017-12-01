@@ -1,10 +1,20 @@
 import _each from 'lodash/each';
+import _get from 'lodash/get';
 import mapStyles from './utils/map'
 
 // console.log( document.getElementsByClassName( 'wp-block-mattheu-gb-map-test' ) );
 _each( document.getElementsByClassName( 'gb-map-test-map-container' ), el => {
-	const attributes = JSON.parse( el.dataset.attributes );
-	const { align, height, mapZoom, mapCenter, mapStyle, mapAllowScroll } = attributes;
+	console.log( el.dataset );
+	const attributes = {
+		align:          _get( el.dataset, 'align', '' ),
+		height:         _get( el.dataset, 'height', '' ),
+		mapZoom:        _get( el.dataset, 'mapZoom', '' ),
+		mapCenter:      _get( el.dataset, 'mapCenter', '0,0' ),
+		mapAllowScroll: _get( el.dataset, 'mapScroll' ) === 'true',
+		mapStyle:       _get( el.dataset, 'mapStyle', 'streets' ),
+	};
+
+	attributes.mapCenter = attributes.mapCenter.split(',');
 
 	mapboxgl.accessToken = mattheuGbMapTestData.mapboxKey;
 
@@ -18,10 +28,7 @@ _each( document.getElementsByClassName( 'gb-map-test-map-container' ), el => {
 		doubleClickZoom: attributes.mapAllowScroll,
 		dragRotate: false,
 		pitchWithRotate: false,
-		// attributionControl: false,
 	});
-
-	// map.addControl( new mapboxgl.AttributionControl({ compact: true }), 'bottom-right' );
 
 	if ( attributes.mapAllowScroll ) {
 		map.addControl( new mapboxgl.NavigationControl(), 'top-right' );

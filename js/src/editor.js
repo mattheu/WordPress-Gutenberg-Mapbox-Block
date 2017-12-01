@@ -1,6 +1,7 @@
 import Map from './components/Map'
 import MapToolbar from './components/MapToolbar'
 import mapStyles from './utils/map'
+import _get from 'lodash/get';
 
 const {
 	registerBlockType,
@@ -22,6 +23,50 @@ registerBlockType( 'mattheu/gb-map-test', {
 	icon: 'location-alt',
 	category: 'layout',
 
+	attributes: {
+        align: {
+            type: 'string',
+            source: 'attribute',
+            attribute: 'data-align',
+            selector: '.gb-map-test-map-container',
+        },
+        height: {
+            type: 'string',
+            source: 'attribute',
+            attribute: 'data-height',
+            selector: '.gb-map-test-map-container',
+            default: 'small',
+        },
+        mapStyle: {
+            type: 'string',
+            source: 'attribute',
+            attribute: 'data-map-style',
+            selector: '.gb-map-test-map-container',
+            default: 'outdoors',
+        },
+        mapCenter: {
+            type: 'string',
+            source: 'attribute',
+            attribute: 'data-map-center',
+            selector: '.gb-map-test-map-container',
+            default: '0,20',
+        },
+        mapZoom: {
+            type: 'number',
+            source: 'attribute',
+            attribute: 'data-map-zoom',
+            selector: '.gb-map-test-map-container',
+            default: 20,
+        },
+        mapScroll: {
+            type: 'boolean',
+            source: 'attribute',
+            attribute: 'data-map-scroll',
+            selector: '.gb-map-test-map-container',
+            default: false,
+        }
+	},
+
 	getEditWrapperProps( attributes ) {
 		const { align, height } = attributes;
 		let wrapperProps = {};
@@ -38,12 +83,13 @@ registerBlockType( 'mattheu/gb-map-test', {
 	},
 
 	edit( { attributes, setAttributes, focus } ) {
-		const { align, height, mapZoom, mapCenter, mapStyle, mapAllowScroll, caption } = attributes;
+		const { align, height, mapZoom, mapStyle, mapAllowScroll, caption } = attributes;
+		const mapCenter = attributes.mapCenter.split(',');
 
 		const onChangeMap = ( settings ) => {
 			setAttributes( {
 				mapZoom: settings.zoom,
-				mapCenter: settings.center,
+				mapCenter: settings.center.join(','),
 			});
 		}
 
@@ -75,36 +121,34 @@ registerBlockType( 'mattheu/gb-map-test', {
 				/>
 		 	</BlockControls> ),
 			focus && ( <InspectorControls key="inspector">
-				<BlockDescription key="description">
+				<BlockDescription>
 					<p>{ __( 'Mapbox Map Block.' ) }</p>
 				</BlockDescription>
 				<h3>{ __( 'Map Settings' ) }</h3>
 				<SelectControl
-					key="mapStyle"
 					label={ __( 'Map style.' ) }
 					options={ mapStyles.getOptions() }
-					onBlur={ ( value ) => { setAttributes( { mapStyle: value } ); } }
-					onChange={ ( e ) => { setAttributes( { mapStyle: e.target.value } ); } }
-					selected={ mapStyle }
+					onChange={ ( value ) => { console.log( 'style', value ); setAttributes( { mapStyle: value } ); } }
+					value={ mapStyle }
 				/>
 				<SelectControl
-					key="mapHeight"
 					label={ __( 'Map height.' ) }
 					options={ [ { label: __( 'Small' ), 'value': 'small' }, { label: __( 'Medium' ), 'value': 'medium' }, { label: __( 'Large' ), 'value': 'large' } ] }
-					onBlur={ ( value ) => { setAttributes( { height: value } ); } }
-					onChange={ ( e ) => { setAttributes( { height: e.target.value } ); } }
+					onChange={ ( value ) => { setAttributes( { height: value } ); } }
 					selected={ height }
 				/>
 				<ToggleControl
-					key="toggleControl"
 					label={ __( 'Allow user scroll and zoom?' ) }
 					checked={ !! mapAllowScroll }
 					onChange={ toggleMapAllowZoom }
 				/>
 			</InspectorControls> ),
-			<figure className="gb-map-test" key="mapContainer">
+			<figure
+				className="gb-map-test"
+				key="mapContainer"
+				data-focused={ focus ? true : false }
+			>
 				<Map
-					key="map"
 					align={ align }
 					height={ height }
 					isFocused={ focus }
@@ -116,7 +160,6 @@ registerBlockType( 'mattheu/gb-map-test', {
 				/>
 				{ ( caption && caption.length > 0 ) || !! focus ? (
 					<Editable
-						key="editable"
 						tagName="figcaption"
 						className="gb-map-test-caption"
 						placeholder={ __( 'Write caption…' ) }
@@ -131,10 +174,16 @@ registerBlockType( 'mattheu/gb-map-test', {
 	},
 
 	save( { attributes } ) {
+		console.log( 'saving', attributes );
 		return <figure className="gb-map-test">
 			<div
 				className="gb-map-test-map-container"
-				data-attributes={ JSON.stringify( attributes ) }
+				data-align={ _get( attributes, 'align' ) }
+				data-height={ _get( attributes, 'height', 'small' ) }
+				data-map-style={ _get( attributes, 'mapStyle', 'light' ) }
+				data-map-scroll={ _get( attributes, 'mapAllowScroll', false ) }
+				data-map-center={ _get( attributes, 'mapCenter' ) }
+				data-map-zoom={ _get( attributes, 'mapZoom' ) }
 			></div>
 			{ ( attributes.caption && attributes.caption.length ) ?
 				<figcaption className="gb-map-test-caption">
