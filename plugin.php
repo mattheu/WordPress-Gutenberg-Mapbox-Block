@@ -15,19 +15,6 @@ add_action( 'admin_enqueue_scripts',        __NAMESPACE__ . '\\register_scripts'
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\\enqueue_block_editor_assets' );
 add_action( 'enqueue_block_assets',        __NAMESPACE__ . '\\enqueue_block_assets' );
 
-add_action( 'registered_post_type', function( $type, &$post_type_object ) {
-	if ( 'post' === $type ) {
-		$post_type_object->template = [
-			[ 'core/image' ],
-			[ 'core/heading', [
-				'placeholder' => 'Author...',
-			] ],
-			[ 'core/paragraph', [
-				'placeholder' => 'Add book description...',
-			] ],
-		];
-	}
-}, 10, 2 );
 function register_scripts() {
 
 	wp_register_style(
