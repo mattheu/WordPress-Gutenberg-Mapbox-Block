@@ -4,7 +4,7 @@ THIS PROJECT IS CURRENTLY IN DEVELOPMENT. THINGS ARE LIKELY TO CHANGE.
 
 Insert map blocks in Gutenberg. Stunning maps provided by Mapbox.
 
-Note that you will need a Mapbox account to use this. The free tier allows 50k map views per month.
+Note that you will need a Mapbox account to use this.
 
 ![Example of the a full width map with satellite style.](https://user-images.githubusercontent.com/494927/28733390-d48324b2-73d3-11e7-936b-d52540a5727e.png)
 
