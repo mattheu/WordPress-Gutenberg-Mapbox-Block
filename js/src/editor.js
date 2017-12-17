@@ -1,5 +1,4 @@
 import Map from './components/Map'
-import MapToolbar from './components/MapToolbar'
 import mapStyles from './utils/map'
 import _get from 'lodash/get';
 
@@ -9,6 +8,7 @@ const {
 	InspectorControls,
 	BlockDescription,
 	Editable,
+	BlockAlignmentToolbar,
 } = wp.blocks;
 
 const {
@@ -114,7 +114,7 @@ registerBlockType( 'mattheu/gb-map-test', {
 
 		return [
 			!! focus && ( <BlockControls key="controls">
-				<MapToolbar
+				<BlockAlignmentToolbar
 					value={ align }
 					onChange={ onChangeAlign }
 					controls={ [ 'left', 'right', 'center', 'wide', 'full' ] }
@@ -128,7 +128,7 @@ registerBlockType( 'mattheu/gb-map-test', {
 				<SelectControl
 					label={ __( 'Map style.' ) }
 					options={ mapStyles.getOptions() }
-					onChange={ ( value ) => { console.log( 'style', value ); setAttributes( { mapStyle: value } ); } }
+					onChange={ ( value ) => { setAttributes( { mapStyle: value } ); } }
 					value={ mapStyle }
 				/>
 				<SelectControl
@@ -174,7 +174,6 @@ registerBlockType( 'mattheu/gb-map-test', {
 	},
 
 	save( { attributes } ) {
-		console.log( 'saving', attributes );
 		return <figure className="gb-map-test">
 			<div
 				className="gb-map-test-map-container"
